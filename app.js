@@ -56,8 +56,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-module.exports = { server, esClient };
-if (require.main === module) {
-  // Start the server only if the script is run directly
-  server;
-}
+module.exports = { app };
