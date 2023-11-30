@@ -14,14 +14,13 @@ const esClient = new elasticsearch.Client({
 app.get('/top-source-ips', async (req, res) => {
   try {
     const response = await esClient.search({
-      index: 'cwl-2023.11.29', // replace with your actual index name
+      index: 'cwl-*.*.*', // We will use wildcards to look at all logs coming from the S3 bucket.  
       body: {
         size: 0,
         query: {
           bool: {
             must: [
               { match: { eventName: 'PutObject' } },
-              // Add more conditions if needed
             ],
           },
         },
