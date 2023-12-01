@@ -1,6 +1,6 @@
-const { expect } = require('chai');
+const expect = require('chai');
 const request = require('supertest'); // Supertest for HTTP assertions
-const { app } = require('../app.js');
+const app = require('../app.js');
 
 describe('GET /top-source-ips', () => {
   it('responds with JSON', (done) => {
