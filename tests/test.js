@@ -1,6 +1,6 @@
-const expect = require('chai');
-const request = require('supertest'); // Supertest for HTTP assertions
-const app = require('../app.js');
+const { expect } = require('chai');
+const request = require('supertest');
+const { app } = require('../app.js');
 
 describe('GET /top-source-ips', () => {
   it('responds with JSON', (done) => {
@@ -24,5 +24,5 @@ describe('GET /top-source-ips', () => {
 
         done();
       });
-  }).timeout(5000);
+  })
 });
