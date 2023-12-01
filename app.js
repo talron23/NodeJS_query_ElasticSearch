@@ -8,7 +8,7 @@ require('dotenv').config();
 // Elasticsearch client setup
 const esClient = new elasticsearch.Client({
   host: 'https://search-elastic-domain-s3-vb4hmg4u24ozmwwbk2rdyrcxva.us-east-1.es.amazonaws.com',
-  log: 'trace', // Change this to 'trace' for more detailed logging
+  log: 'debug', // Change this to 'trace' for more detailed logging
   httpAuth: `${process.env.ELASTIC_USERNAME}:${process.env.ELASTIC_PASSWORD}`,
 });
 
