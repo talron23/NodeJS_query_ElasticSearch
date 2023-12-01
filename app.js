@@ -1,6 +1,8 @@
 const express = require('express');
 const elasticsearch = require('elasticsearch');
 const app = express();
+const path = require('path');
+
 require('dotenv').config();
 
 // Elasticsearch client setup
@@ -47,6 +49,14 @@ app.get('/top-source-ips', async (req, res) => {
     console.error('Error querying Elasticsearch:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});
+
+// Serve React app build output
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Handle all other routes by serving the index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the Express server
