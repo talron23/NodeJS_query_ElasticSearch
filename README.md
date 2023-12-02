@@ -26,15 +26,15 @@ We use CloudTrail to store all audit logs of the S3 bucket in a new bucket. When
 
 ![KMS](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/b6aeb5eb-d4ae-477e-b1e6-90a607aaebe6|width=80)
 
-Enable CloudWatch logs to integrating them with the trail so that CloudWatch can monitor the trail logs and send them to the ElasticSearch cluster:
+Enable CloudWatch logs to integrate them with the trail so that CloudWatch can monitor the trail logs and send them to the ElasticSearch cluster:
 
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/48b84af4-5c7d-4ffe-bdab-89044dd527aa|width=80)
 
-For the event type, our aim is to analze only the audit logs of an S3 bucket, so select only "Data events":
+For the event type, our aim is to analyze only the audit logs of an S3 bucket, so select only "Data events":
 
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/6c27f3ae-5bea-40e2-ac8c-2465016b0691|width=80)
 
-We will reduce costs and logging events by choosing S3 as the data event source, and select only a specific S3 bucket we wish to analyze:
+We will reduce costs and logging events by choosing S3 as the data event source, and selecting only a specific S3 bucket we wish to analyze:
 
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/7a431964-25d7-4ddb-b506-40ccd83ad275|width=80)
 
@@ -61,7 +61,7 @@ Proceed with all the default settings and create the OpenSearch cluster. It will
 
 ### CloudWatch 
 
-While waiting for the provisiong for the cluster, we will go on creating a CloudWatch log group to stream data in near real time to our domain using CloudWatch subscription. 
+While waiting for the provisioning for the cluster, we will go on creating a CloudWatch log group to stream data in near-real time to our domain using CloudWatch subscription. 
 
 Go to the CloudWatch log groups and select the cloudtrail log group which was automatically created when we created the trail. Create a subscription for this group:
 
@@ -128,7 +128,7 @@ Configure the visualization filter to show the source IP address ordered by coun
 
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/fbd16733-5ff2-47c6-bde4-0f4637638041|width=80)
 
-Save the visualization, and go on to the 'Dashbaoards' tab to create a Dashboard. 
+Save the visualization, and go on to the 'Dashboards' tab to create a Dashboard. 
 Click on "Add an existing" and choose the visualization we just created:
 
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/ceabe714-4ea6-4d2e-b5b5-a28013c7a9a8|width=80)
@@ -189,8 +189,8 @@ Create a Security Group for the ALB which listens on HTTPS only:
 
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/98baddbd-06ef-40a1-98d4-b825be0354fb|width=80)
 
-Our API lisetens on port 3000 but the Load Balancer will accept only HTTPS connections and reach our backend API at port 3000.
-Similiary to this setup, the seucrity group of our EC2 instance will need to accept only inbound rule for TCP Port 3000, coming from the ALB security group we created. 
+Our API listens on port 3000 but the Load Balancer will accept only HTTPS connections and reach our backend API at port 3000.
+Similarly to this setup, the security group of our EC2 instance will need to accept only inbound rule for TCP Port 3000, coming from the ALB security group we created. 
 It does not need to accept HTTPS connections as it will only get requests from the ALB on port 3000. 
 
 Move on with creating an HTTPS:443 listener, choosing the Target Group we created.
@@ -208,11 +208,11 @@ After our Load Balancer is ready, go ahead and create a DNS Alias record on Rout
 
 Now we can reach our API on the DNS record we configured. 
 
-Make sure to install depedencies on the EC2 instance by running 
+Make sure to install dependencies on the EC2 instance by running 
 ```
 npm install
 ```
-And our application is ready to go! Another step to make our app more reliable would be configruing it as a service in /etc/systemd/system/nodeapp.service:
+And our application is ready to go! Another step to make our app more reliable would be configuring it as a service in /etc/systemd/system/nodeapp.service:
   ```
 [Unit]
 Description=Node.js App
@@ -245,7 +245,7 @@ Verify the service is running correctly:
 
 #### GitHub Workflow Setup
 We have implemented continuous integration (CI) for our Node.js Express API using GitHub Actions. The CI process includes linting and running tests automatically whenever changes are pushed to the main branch.
-The GitHub workflow is triggered on each push to the main branch. It sets up a Node.js environment, installs dependencies, lints the code using ESLint, and runs tests using Mocha. The environment variables ELASTIC_USERNAME and ELASTIC_PASSWORD are securely provided using GitHub Secrets. You can deploy the Secrets at the GitHub reposirtoy settings -> Secrets and Variables:
+The GitHub workflow is triggered on each push to the main branch. It sets up a Node.js environment, installs dependencies, lints the code using ESLint, and runs tests using Mocha. The environment variables ELASTIC_USERNAME and ELASTIC_PASSWORD are securely provided using GitHub Secrets. You can deploy the Secrets at the GitHub repository settings -> Secrets and Variables:
 
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/06d69284-f4f3-47bf-8d86-253cfe186f64)
 
