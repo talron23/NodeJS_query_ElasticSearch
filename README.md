@@ -7,9 +7,8 @@ This project aims to audit and analyze S3 bucket access using AWS CloudTrail, El
 
 - [Prerequisites](#prerequisites)
 - [Stream Log data to Amazon OpenSearch domain](#stream-log-data-to-amazon-opensearch-domain)
-- [ElasticSearch Setup](#elasticsearch-setup)
+- [ElasticSearch and Kibana Setup](#elasticsearch-and-kibana-setup)
 - [Node.js Express API](#nodejs-express-api)
-- [Kibana Visualization](#kibana-visualization)
 - [Continous Integration and Tests](#continous-integration-and-tests)
 
 
@@ -85,16 +84,47 @@ Create the policy and go on to create the IAM role - select "Labmda" as the serv
 Along that, you might need to also add the AWSLambdaBasicExecutionRole policy, if you wish to enable logs on the lambda function. 
 
 Go back to the CloudWatch subscription creation and choose the IAM role we just created for the Lambda execution. 
-
-Choose "CloudTrail" for the log format and keep the filter empty:
+Proceed with choosing "CloudTrail" for the log format and keep the filter empty:
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/a0fd638f-1245-4361-9661-3e773de15814)
 
 Click "Start streaming". 
 
-## ElasticSearch Setup
-[Details on setting up ElasticSearch and Kibana, indexing data, etc.]
+## ElasticSearch and Kibana Setup
 
-Node.js Express API
+Go to the Amazon OpenSearch service and access the Kibana URL of our domain. Login with the master user you configured earlier. 
+Define an index pattern to fit with the logs coming from CloudWatch:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/1e6eec2b-0c77-45ff-a354-11772a802079)
+
+Select the @timestamp attribute as primary time field for use with the global time filter, and create the index pattern:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/2bc57ddd-d9b6-4098-97af-57aa267a39c0)
+
+We can now start exploring the logs coming to ElasticSearch at the 'Discover' tab. 
+Click on "Add filter" and configure it accordingly with the events you wish to further observe. Our goal is to find out top most source IPs with PutObject event:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/dfbf9aa0-2f21-4c24-b3b3-e232705d4d65)
+
+We will use this data to create a kibana visualization. Save this report by clicking 'save' at the top menu:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/505c9b7e-d1c2-4fd8-abb8-1e1f8b13ee90)
+
+Go to the 'Visualize' and proceed with creating a visualization. Choose your desired visualization type and select the filtered report we saved:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/16022206-ce3e-4824-af91-dc2de084675a)
+
+Configure the visualization filter to show the source IP address ordered by count:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/fbd16733-5ff2-47c6-bde4-0f4637638041)
+
+Save the visualization, and go on to the 'Dashbaoards' tab to create a Dashboard. 
+Click on "Add an existing" and choose the visualization we just created:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/ceabe714-4ea6-4d2e-b5b5-a28013c7a9a8)
+
+There we go. Our Kibana dashboard is set. Don't forget to save it by clicking 'save' at the top menu. 
+
+## Node.js Express API
 [Details on setting up and running the Node.js Express API, API endpoints, etc.]
 
 Kibana Visualization
