@@ -22,7 +22,7 @@ app.get('/top-source-ips', async (req, res) => {
         query: {
           bool: {
             must: [
-              { match: { eventName: 'sutObject' } },
+              { match: { eventName: 'PutObject' } },
             ],
           },
         },

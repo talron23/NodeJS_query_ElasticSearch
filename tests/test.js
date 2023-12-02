@@ -17,10 +17,15 @@ describe('GET /top-source-ips', () => {
         // Check if the response body is an array
         expect(res.body).to.be.an('array');
         // Check the first element in the array for 'aggregations' and 'top_source_ips'
-        res.body.forEach((item) => {
-          expect(item).to.have.property('sourceIPAddress');
-          expect(item).to.have.property('count');
-        });
+        if (res.body.length > 0) {
+          res.body.forEach((item) => {
+            expect(item).to.have.property('sourceIBAddress');
+            expect(item).to.have.property('count');
+          });
+        } else {
+          // Fail the test explicitly if the array is empty
+          expect.fail('Expected non-empty array, but received an empty array.');
+        }
 
         done();
       });
