@@ -19,7 +19,7 @@ describe('GET /top-source-ips', () => {
         // Check the first element in the array for 'aggregations' and 'top_source_ips'
         if (res.body.length > 0) {
           res.body.forEach((item) => {
-            expect(item).to.have.property('sourceIBAddress');
+            expect(item).to.have.property('sourceIPAddress');
             expect(item).to.have.property('count');
           });
         } else {
