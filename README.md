@@ -10,7 +10,7 @@ This project aims to audit and analyze S3 bucket access using AWS CloudTrail, El
 - [ElasticSearch and Kibana Setup](#elasticsearch-and-kibana-setup)
 - [Node.js Express API](#nodejs-express-api)
 - [Setup the Node.js server](#setup-the-nodejs-server)
-- [Continous Integration and Tests](#continous-integration-and-tests)
+- [Continous Integration and Tests using GitHub Actions](#continous-integration-and-tests-using-github-actions)
 
 
 ## Prerequisites
@@ -18,12 +18,11 @@ This project aims to audit and analyze S3 bucket access using AWS CloudTrail, El
 - AWS Account with an S3 bucket
 
 ## Stream Log data to Amazon OpenSearch domain
-Our goal is to analyze S3 bucket audit logs. Therefore, we are starting by making sure we have an S3 bucket.
+Our goal is to analyze S3 bucket audit logs, so we start by ensuring we have an S3 bucket.
 
 ### CloudTrail
 
-We'll use cloudtrail to store all the audit logs of the S3 bucket in a new bucket. 
-When creating the trail, we will configure a KMS key in order to make sure our logs files will be encrypted:
+We use CloudTrail to store all audit logs of the S3 bucket in a new bucket. When creating the trail, we configure a KMS key for encrypting log files:
 
 ![KMS](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/b6aeb5eb-d4ae-477e-b1e6-90a607aaebe6|width=80)
 
@@ -99,6 +98,11 @@ Click "Start streaming".
 ## ElasticSearch and Kibana Setup
 
 Go to the Amazon OpenSearch service and access the Kibana URL of our domain. Login with the master user you configured earlier. 
+
+You might notice we are yet to observe the logs on the ElasticSearch cluster. This is because we first need to map the Lambda role with a backend role on ElasticSearch which grants him permission to write the logs. Make sure you add a backend role, specifying the ARN of the Lambda role we created before:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/4de2b86a-f49f-4810-a4d7-b1eeb3476ce4)
+
 Define an index pattern to fit with the logs coming from CloudWatch:
 
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/1e6eec2b-0c77-45ff-a354-11772a802079|width=80)
@@ -238,5 +242,17 @@ Verify the service is running correctly:
 ![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/1be80613-e510-4e5a-9088-25b6ce6cb5fc)
 
 ## Continous Integration and Tests using GitHub Actions
-[Details on setting up Continous Integration with GitHub Actions and running tests.]
 
+#### GitHub Workflow Setup
+We have implemented continuous integration (CI) for our Node.js Express API using GitHub Actions. The CI process includes linting and running tests automatically whenever changes are pushed to the main branch.
+The GitHub workflow is triggered on each push to the main branch. It sets up a Node.js environment, installs dependencies, lints the code using ESLint, and runs tests using Mocha. The environment variables ELASTIC_USERNAME and ELASTIC_PASSWORD are securely provided using GitHub Secrets. You can deploy the Secrets at the GitHub reposirtoy settings -> Secrets and Variables:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/06d69284-f4f3-47bf-8d86-253cfe186f64)
+
+#### Tests (/tests/test.js)
+These tests use Mocha as the testing framework, Chai for assertions, and Supertest for making HTTP requests to the API. The tests include checking if the response is in JSON format and if it contains the expected sourceIPAddress and count properties on each item of the array. This test will reliably confirm our API is working correctly. 
+
+#### ESLint Configuration (/.eslintrc.js)
+This ESLint configuration is specifically tailored for Node.js and Mocha, allowing for linting of test files.
+
+By following this CI setup, we ensure that our code is consistently tested and linted with each change.
