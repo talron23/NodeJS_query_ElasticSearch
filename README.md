@@ -1,4 +1,4 @@
-# NodeJS API to query ElasticSerach
+# Node.js API for Querying ElasticSearch
 ## Overview
 
 This project aims to audit and analyze S3 bucket access using AWS CloudTrail, ElasticSearch, and Node.js Express. It includes processes for sending audit logs to another S3 bucket, ingesting logs into ElasticSearch, creating visualizations in Kibana, and building an API to query top source IPs for PutObject requests.
@@ -9,6 +9,7 @@ This project aims to audit and analyze S3 bucket access using AWS CloudTrail, El
 - [Stream Log data to Amazon OpenSearch domain](#stream-log-data-to-amazon-opensearch-domain)
 - [ElasticSearch and Kibana Setup](#elasticsearch-and-kibana-setup)
 - [Node.js Express API](#nodejs-express-api)
+- [Setup the Node.js server](#setup-the-nodejs-server)
 - [Continous Integration and Tests](#continous-integration-and-tests)
 
 
