@@ -5,8 +5,7 @@ module.exports = {
   },
   extends: 'eslint:recommended',
   parserOptions: {
-    "ecmaVersion": "latest",
+    "ecmaVersion": "latest",   // ecmaVersion need be set to latest, otherwise will alert on an error in our code
   },
-  // parserOptions is a MUST
   plugins: ['mocha'],
 };

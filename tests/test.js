@@ -16,7 +16,7 @@ describe('GET /top-source-ips', () => {
       .end((err, res) => {
         // Check if the response body is an array
         expect(res.body).to.be.an('array');
-        // Check the first element in the array for 'aggregations' and 'top_source_ips'
+        // Check if all elements in the array has both the 'sourceIPAddress' and 'count' properties
         if (res.body.length > 0) {
           res.body.forEach((item) => {
             expect(item).to.have.property('sourceIPAddress');

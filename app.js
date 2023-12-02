@@ -7,16 +7,16 @@ require('dotenv').config();
 
 // Elasticsearch client setup
 const esClient = new elasticsearch.Client({
-  host: 'https://search-elastic-domain-s3-vb4hmg4u24ozmwwbk2rdyrcxva.us-east-1.es.amazonaws.com',
-  log: 'debug', // Change this to 'trace' for more detailed logging
-  httpAuth: `${process.env.ELASTIC_USERNAME}:${process.env.ELASTIC_PASSWORD}`,
+  host: 'https://search-elastic-domain-s3-vb4hmg4u24ozmwwbk2rdyrcxva.us-east-1.es.amazonaws.com', // your ES domain
+  log: 'debug', 
+  httpAuth: `${process.env.ELASTIC_USERNAME}:${process.env.ELASTIC_PASSWORD}`, // credentials are in .env file
 });
 
 // Express route to handle GET requests for top-source-ips
 app.get('/top-source-ips', async (req, res) => {
   try {
     const response = await esClient.search({
-      index: 'cwl-*.*.*', // We will use wildcards to look at all logs coming from the S3 bucket.  
+      index: 'cwl-*.*.*', // We will use wildcards to look at all logs coming from the S3 bucket
       body: {
         size: 0,
         query: {
@@ -30,7 +30,7 @@ app.get('/top-source-ips', async (req, res) => {
           top_source_ips: {
             terms: {
               field: 'sourceIPAddress.keyword', // Use the .keyword subfield for aggregation
-              size: 10, // specify the number of top IPs you want to retrieve
+              size: 20, // specify the number of top IPs you want to retrieve
             },
           },
         },
@@ -51,10 +51,8 @@ app.get('/top-source-ips', async (req, res) => {
   }
 });
 
-// Serve React app build output
-app.use(express.static(path.join(__dirname, 'public')));
-
 // Handle all other routes by serving the index.html
+app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -65,4 +63,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-module.exports = { app };
+module.exports = { app }; // export app for tests code
