@@ -163,15 +163,79 @@ This Node.js Express API provides endpoints for querying and retrieving informat
 #### Variables Configuration
 The API requires the following environment variables to be configured:
 
-ELASTIC_USERNAME: Username for ElasticSearch authentication.
-ELASTIC_PASSWORD: Password for ElasticSearch authentication.
-PORT: Port on which the API server will listen (default is 3000).
+ELASTIC_USERNAME: Username for ElasticSearch authentication
+ELASTIC_PASSWORD: Password for ElasticSearch authentication
+PORT: Port on which the API server will listen (default is 3000)
 
 For security purposes, ensure that Elasticsearch authentication credentials (ELASTIC_USERNAME and ELASTIC_PASSWORD) are kept secure and are not included in the code.
 Set up the required environment variables by creating a .env file or directly in your environment.
 
 ## Setup the Node.js server
+We will set up our API server on an EC2 instance with ubuntu 22.04, running it secured with HTTPS behind an Application Load Balancer.
+Configure a Target Group of 'Instances' type for our EC2 instance. Choose HTTPS:443 for our protocol, and place it in the same VPC as our EC2 instance. 
 
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/300a35bf-6f9a-4009-9cb2-905ddd6a6186)
+
+For the Health Check, we will need to override the default settings and configure the 3000 port which our API server listens on as the Health check port.
+Choose /top-source-ips, as the path, and keep the HTTP success code to '200'. 
+Click next to move on to the 'Register targets' step. Choose our EC2 instance - register it and create the Target Group.
+
+On the EC2 dashboard, create an Application Load Balancer. Make it internet facing and configure it in the same VPC and AZ where our EC2 instance lies. 
+Create a Security Group for the ALB which listens on HTTPS only:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/98baddbd-06ef-40a1-98d4-b825be0354fb)
+
+Our API lisetens on port 3000 but the Load Balancer will accept only HTTPS connections and reach our backend API at port 3000.
+Similiary to this setup, the seucrity group of our EC2 instance will need to accept only inbound rule for TCP Port 3000, coming from the ALB security group we created. 
+It does not need to accept HTTPS connections as it will only get requests from the ALB on port 3000. 
+
+Move on with creating an HTTPS:443 listener, choosing the Target Group we created.
+Choose an SSL certificate which will be attached to the Load Balancer:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/8741bafa-085f-42bf-9185-b699b6b0315c)
+
+If you don't have a certificate, go to the AWS Certificate Manager, and request a public SSL certificate for a domain you own. You can register a domain on Route 53 or other vendors. 
+
+Click on 'Create Load Balancer' after reviewing all the settings are correct. 
+
+After our Load Balancer is ready, go ahead and create a DNS Alias record on Route 53 for the Load Balancer:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/89686c74-ee1f-4557-85e6-b3dcaca42b91)
+
+Now we can reach our API on the DNS record we configured. 
+
+Make sure to install depedencies on the EC2 instance by running 
+```
+npm install
+```
+And our application is ready to go! Another step to make our app more reliable would be configruing it as a service in /etc/systemd/system/nodeapp.service:
+  ```
+[Unit]
+Description=Node.js App
+
+[Service]
+ExecStart=/usr/bin/node /home/ubuntu/node_app/app.js
+Restart=always
+User=ubuntu
+Group=ubuntu
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/home/ubuntu/node_app
+
+[Install]
+WantedBy=multi-user.target
+  ```
+
+Run and enable the service to make it run on boot:
+  ```
+sudo systemctl daemon-reload
+sudo systemctl enable your-service-name
+sudo systemctl start your-service-name
+  ```
+
+Verify the service is running correctly:
+
+![image](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/1be80613-e510-4e5a-9088-25b6ce6cb5fc)
 
 ## Continous Integration and Tests using GitHub Actions
 [Details on setting up Continous Integration with GitHub Actions and running tests.]
