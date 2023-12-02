@@ -168,6 +168,7 @@ This Node.js Express API provides endpoints for querying and retrieving informat
 The API requires the following environment variables to be configured:
 
 ELASTIC_USERNAME: Username for ElasticSearch authentication
+
 ELASTIC_PASSWORD: Password for ElasticSearch authentication
 PORT: Port on which the API server will listen (default is 3000)
 
