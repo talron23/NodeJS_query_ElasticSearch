@@ -239,8 +239,8 @@ WantedBy=multi-user.target
 Run and enable the service to make it run on boot:
   ```
 sudo systemctl daemon-reload
-sudo systemctl enable your-service-name
-sudo systemctl start your-service-name
+sudo systemctl enable nodeapp
+sudo systemctl start nodeapp
   ```
 
 Verify the service is running correctly:
