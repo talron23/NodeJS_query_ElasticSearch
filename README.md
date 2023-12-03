@@ -3,6 +3,11 @@
 
 This project aims to audit and analyze S3 bucket access using AWS CloudTrail, ElasticSearch, and Node.js Express. It includes processes for sending audit logs to another S3 bucket, ingesting logs into ElasticSearch, creating visualizations in Kibana, and building an API to query top source IPs for PutObject requests.
 
+
+![aws_s3 drawio](https://github.com/talron23/NodeJS_query_ElasticSearch/assets/108025960/1cf95c30-006c-4018-8f5c-a7844edd746f)
+
+
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
